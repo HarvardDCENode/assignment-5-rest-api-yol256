@@ -1,0 +1,20 @@
+{
+  "name": "assignment-5-rest-api-yol256",
+  "version": "1.0.0",
+  "description": "The description of this assignment can be found in Canvas at [Assignment #5](https://canvas.harvard.edu/courses/112562/assignments/660148) (Spring 2023)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarvardDCENode/assignment-5-rest-api-yol256.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarvardDCENode/assignment-5-rest-api-yol256/issues"
+  },
+  "homepage": "https://github.com/HarvardDCENode/assignment-5-rest-api-yol256#readme"
+}
