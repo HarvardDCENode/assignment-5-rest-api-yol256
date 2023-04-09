@@ -18,5 +18,17 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  }
+  },
+  "description": "The description of this assignment can be found in Canvas at [Assignment #4](https://canvas.harvard.edu/courses/112562/assignments/660147) (Spring 2023z)",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarvardDCENode/assignment-5-rest-api-yol256.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarvardDCENode/assignment-5-rest-api-yol256/issues"
+  },
+  "homepage": "https://github.com/HarvardDCENode/assignment-5-rest-api-yol256#readme"
 }
