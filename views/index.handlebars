@@ -1,0 +1,31 @@
+
+{{#if exists}}
+    <div class="task heading">
+        <p id="description">Description</p>
+        <p>Date</p>
+        <p>Time</p>
+        <p>Controls</p>
+    </div>
+    {{#each tasks}}
+        <div class="task {{#if this.completed}} complete {{/if}}">
+            <p id="description">{{this.description}}</p>
+            <p>{{this.date}}</p>
+            <p>{{this.time}}</p>
+            {{!-- <p>Completed: <input type="checkbox" {{#if this.completed}}checked{{/if}}></p> --}}
+            <form action="/tasks/{{this._id}}?_method=PATCH" method="POST">
+                <input type="text" name="completed" value="{{#if this.completed}} off {{else}} on {{/if}}" class="hidden">
+                <input type="submit" value="{{#if this.completed}} undo {{else}} complete {{/if}}" class="completeBtn">
+            </form>
+            <a href="/{{this._id}}">Edit</a>
+            <form action="/tasks/{{this._id}}?_method=DELETE" method="POST">
+                <input type="submit" value="Delete" class="delete">
+            </form>
+        </div>
+    {{/each}}
+{{else}}
+    <div class="task">
+        <p class="no-tasks">No tasks to show</p>
+    </div>
+{{/if}}
+<a href="/create"><button>Add New Task</button></a>
+

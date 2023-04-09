@@ -1,0 +1,11 @@
+<div class="heading2">
+    <p id="description">Description</p>
+    <p>Date</p>
+    <p>Time</p>
+</div>
+<form action="/tasks/{{this.id}}?_method=PATCH" method="POST" class="create">
+    <textarea placeholder="description" name="description">{{description}}</textarea>
+    <input type="date" name="date" value={{date}} />
+    <input type="time" name="time" value={{time}} />
+    <button type="submit"> Edit Task</button>
+</form>
