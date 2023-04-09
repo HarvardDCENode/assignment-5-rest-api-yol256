@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var {getAllTasks, createTask, updateOrDeleteTask, getTask, createTaskPage} = require('../controllers/task');
+var { getAllTasks, createTask, updateTask, deleteTask, getTask } = require('../controllers/task');
 /* GET home page. */
-router.get('/',getAllTasks);  // renders all the tasks
+router.get('/', getAllTasks);  // returns all the tasks
 router.post('/', createTask); // creates a new task
-router.get('/create',createTaskPage); // renders the create task page
-router.post('/tasks/:id', updateOrDeleteTask) // updates or deletes a task
-router.get('/:id', getTask); // renders the edit task page
+router.get('/:id', getTask); // returns a specific task page
+router.patch('/:id', updateTask) // updates  a task
+router.delete('/:id', deleteTask) // deletes a task
 
 module.exports = router;

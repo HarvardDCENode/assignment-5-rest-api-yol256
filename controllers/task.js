@@ -1,11 +1,19 @@
 var Task = require('../models/Task');
-
+//gets all tasks from database
 function getAllTasks(req, res, next) {
     Task.find({}).then((tasks) => {
-      var exists = tasks.length > 0; // variable to check if there are any tasks, used to display a message if there are no tasks
-      res.render('index', {tasks: tasks.map(task => task.toJSON()).map(task => {return {...task, date: task.date.toLocaleDateString(), time: task.date.toLocaleTimeString()}}), exists, title: 'Task List' });
+        res.json({
+            tasks: tasks
+                .map(task => task.toJSON())
+                .map(task => {
+                    return {
+                        ...task, date: task.date.toLocaleDateString(),
+                        time: task.date.toLocaleTimeString()
+                    }
+                })
+        });
     }).catch((err) => {
-      next(err);
+        next(err);
     });
 }
 
@@ -13,59 +21,54 @@ function createTask(req, res, next) {
     req.body.date = new Date(req.body.date + " " + req.body.time); // save the date and time as a single date object
     var task = new Task(req.body);
     task.save().then(() => {
-      res.redirect('/'); // once the task is saved, redirect to the home page
+        res.json(task); // once the task is saved, send the task back to the client
     }).catch((err) => {
-      next(err);
+        next(err);
     });
 }
-
-function updateOrDeleteTask(req,res,next) {
-    var {id} = req.params;
-    var {_method} = req.query; // get the method from the query string
-    if (_method === 'DELETE') { // if the method is delete, delete the task
-      Task.findByIdAndDelete(id).then(function (){
-        res.redirect('/');
-      }).catch(function (err){
+//deletes task from database
+function deleteTask(req, res, next) {
+    var { id } = req.params;
+    Task.findByIdAndDelete(id).then(function () {
+        res.json({success: true});
+    }).catch(function (err) {
         next(err);
-      })
-    } else if (_method === 'PATCH') { // if the method is patch, update the task
-      console.log("Hello", req.body)
-      if(req.body.completed && req.body.completed.trim() === 'on') { // if the checkbox is checked, the value is 'on', so set the value to true
-        req.body.completed = true;
-      }else if(req.body.completed && req.body.completed.trim() === 'off') { // if the checkbox is not checked, the value is 'off', so set the value to false
-        req.body.completed = false;
-      }
-      if(req.body.date) // if the date is not empty, set the date to a date object
+    })
+}
+// updates task in database
+function updateTask(req, res, next) {
+    var { id } = req.params;
+    if (req.body.date) // if the date is not empty, set the date to a date object
         req.body.date = new Date(req.body.date + " " + req.body.time); // save the date and time as a single date object
-      Task.findByIdAndUpdate(id, req.body).then(function (){
-        res.redirect('/'); // once the task is saved, redirect to the home page
-      }).catch(function (err){
+    Task.findByIdAndUpdate(id, req.body).then(function (task) {
+        console.log(task)
+        res.json(task) // once the task is saved send the updated task back to the client
+    }).catch(function (err) {
         next(err);
-      })
-    }
+    })
 }
-
+// gets a specific task from the database
 function getTask(req, res, next) {
-    var {id} = req.params;
+    var { id } = req.params;
     Task.findById(id).then((task) => {
-      var {description, completed, date, id} = task;
-      var formatedDate = date.toLocaleDateString().split('/').map(x => x.length === 4 || x.length === 2 ? x : "0"+x); // format the date to be in the format yyyy-mm-dd. This is the format that the date input accepts
-      formatedDate = `${formatedDate[2]}-${formatedDate[0]}-${formatedDate[1]}`;
-      var formatedTime = date.toLocaleTimeString().split(' ')[0].split(':').map(x => x.length === 2 ? x : "0"+x).join(':'); // format the time to be in the format hh:mm:ss. This is the format that the time input accepts
-      res.render('edit', { title: 'Edit Task', description, completed, date: formatedDate, id, time: formatedTime});
+        if (!task)
+            throw new Error('Task not found');
+
+        var { description, completed, date, id } = task;
+        var formatedDate = date.toLocaleDateString().split('/').map(x => x.length === 4 || x.length === 2 ? x : "0" + x); // format the date to be in the format yyyy-mm-dd. This is the format that the date input accepts
+        formatedDate = `${formatedDate[2]}-${formatedDate[0]}-${formatedDate[1]}`;
+        var formatedTime = date.toLocaleTimeString().split(' ')[0].split(':').map(x => x.length === 2 ? x : "0" + x).join(':'); // format the time to be in the format hh:mm:ss. This is the format that the time input accepts
+        res.json({ description, completed, date: formatedDate, id, time: formatedTime });
     }).catch((err) => {
-      next(err);
+        next(err);
     });
 }
 
-function createTaskPage(req, res, next) {
-    res.render('create', { title: 'Create Task' });
-}
 
 module.exports = {
     getAllTasks,
     createTask,
-    updateOrDeleteTask,
+    updateTask,
+    deleteTask,
     getTask,
-    createTaskPage
 }
